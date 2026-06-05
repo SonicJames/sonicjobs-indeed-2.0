@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply — Monster × SonicJobs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --partner-color: #52a32e;
+      --partner-light: #1a2e10;
+      --partner-mid: #68c43a;
+    }
+
+    /* Partner nav */
+    .partner-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 28px;
+      border-bottom: 0.5px solid var(--sj-border);
+      background: var(--sj-bg);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .partner-logo-wrap { display: flex; align-items: center; gap: 14px; }
+    .monster-logo {
+      font-size: 22px; font-weight: 700; letter-spacing: -1px;
+      color: var(--partner-mid);
+      font-family: 'DM Sans', sans-serif;
+    }
+    .monster-logo .claw { color: var(--partner-color); position: relative; }
+    .partner-divider { width: 1px; height: 20px; background: var(--sj-border); }
+    .powered-by {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; color: var(--sj-text-muted);
+    }
+    .powered-by-logo { display: flex; align-items: center; gap: 5px; }
+    .powered-by-logo svg { opacity: 0.8; }
+    .powered-by-name { font-size: 11px; font-weight: 600; color: var(--sj-purple-mid); }
+    .secure-badge {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 12px; color: var(--sj-text-muted);
+      padding: 5px 10px; border-radius: 12px;
+      background: var(--sj-bg-secondary); border: 0.5px solid var(--sj-border);
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      background: var(--sj-bg-secondary);
+      padding: 10px 28px;
+      border-bottom: 0.5px solid var(--sj-border);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .progress-track { flex: 1; height: 3px; background: var(--sj-border); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 2px; background: var(--partner-color); width: 75%; }
+    .progress-label { font-size: 12px; color: var(--sj-text-muted); white-space: nowrap; }
+
+    /* Job context banner */
+    .job-banner {
+      background: var(--sj-bg-secondary);
+      border-bottom: 0.5px solid var(--sj-border);
+      padding: 14px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .job-banner-left { display: flex; align-items: center; gap: 12px; }
+    .job-banner-info { font-size: 13px; color: var(--sj-text-muted); }
+    .job-banner-title { font-size: 14px; font-weight: 500; color: var(--sj-text); margin-bottom: 1px; }
+    .job-banner-meta { font-size: 12px; color: var(--sj-text-muted); }
+    .match-chip {
+      display: flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 12px;
+      background: var(--partner-light); color: var(--partner-mid);
+      font-size: 12px; font-weight: 500; border: 0.5px solid rgba(82,163,46,0.2);
+    }
+
+    /* Main layout */
+    .apply-wrap {
+      max-width: 680px; margin: 32px auto; padding: 0 24px 60px;
+    }
+    .section-block { margin-bottom: 24px; }
+    .block-title {
+      font-size: 12px; font-weight: 600; color: var(--sj-text-muted);
+      text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 14px;
+    }
+
+    /* Resume import card */
+    .resume-card {
+      background: var(--sj-bg-secondary);
+      border: 0.5px solid var(--sj-border);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .resume-file { display: flex; align-items: center; gap: 10px; }
+    .resume-icon { font-size: 20px; color: var(--sj-purple-mid); }
+    .resume-name-text { font-size: 13px; font-weight: 500; color: var(--sj-text); }
+    .resume-meta { font-size: 11px; color: var(--sj-text-muted); margin-top: 1px; }
+    .resume-status { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--partner-mid); }
+
+    /* Form fields */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-field { display: flex; flex-direction: column; gap: 5px; }
+    .form-field.full { grid-column: 1 / -1; }
+    .field-label { font-size: 12px; color: var(--sj-text-muted); }
+    .field-input {
+      padding: 9px 12px;
+      background: var(--sj-bg-secondary);
+      border: 0.5px solid var(--sj-border);
+      border-radius: var(--radius-md);
+      font-size: 13px; color: var(--sj-text);
+      font-family: inherit; outline: none;
+    }
+    .field-input:focus { border-color: var(--sj-purple); }
+    .field-select {
+      padding: 9px 12px;
+      background: var(--sj-bg-secondary);
+      border: 0.5px solid var(--sj-border);
+      border-radius: var(--radius-md);
+      font-size: 13px; color: var(--sj-text);
+      font-family: inherit; outline: none; appearance: none;
+    }
+
+    /* Screening questions */
+    .screening-card {
+      background: var(--sj-bg-secondary);
+      border: 0.5px solid var(--sj-border);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px; margin-bottom: 10px;
+    }
+    .sq-label { font-size: 11px; color: var(--sj-text-muted); margin-bottom: 3px; }
+    .sq-question { font-size: 13px; color: var(--sj-text); margin-bottom: 10px; line-height: 1.5; }
+    .sq-options { display: flex; gap: 8px; flex-wrap: wrap; }
+    .sq-opt {
+      padding: 6px 14px; border-radius: 16px; font-size: 12px;
+      border: 0.5px solid var(--sj-border); cursor: pointer;
+      color: var(--sj-text-muted); background: var(--sj-bg);
+    }
+    .sq-opt.selected { background: var(--partner-light); color: var(--partner-mid); border-color: rgba(82,163,46,0.3); }
+
+    /* AI-tailored notice */
+    .ai-notice {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: var(--sj-purple-light); border: 0.5px solid rgba(127,119,221,0.2);
+      border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 24px;
+    }
+    .ai-notice i { color: var(--sj-purple-mid); font-size: 16px; margin-top: 1px; }
+    .ai-notice p { font-size: 12px; color: var(--sj-text-muted); line-height: 1.6; }
+    .ai-notice strong { color: var(--sj-purple-mid); }
+
+    /* Submit area */
+    .submit-area { display: flex; align-items: center; justify-content: space-between; margin-top: 28px; }
+    .btn-partner-primary {
+      padding: 11px 28px;
+      background: var(--partner-color); color: #fff;
+      border: none; border-radius: 24px;
+      font-size: 14px; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.15s;
+    }
+    .btn-partner-primary:hover { background: var(--partner-mid); }
+    .submit-note { font-size: 11px; color: var(--sj-text-muted); }
+  </style>
+</head>
+<body>
+
+<!-- Partner Nav -->
+<nav class="partner-nav">
+  <div class="partner-logo-wrap">
+    <div class="monster-logo"><span class="claw">m</span>onster</div>
+    <div class="partner-divider"></div>
+    <div class="powered-by">
+      <span>Powered by</span>
+      <div class="powered-by-logo">
+        <svg width="16" height="16" viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="14" stroke="#8b84e8" stroke-width="2"/>
+          <circle cx="16" cy="16" r="8" stroke="#a09ae8" stroke-width="1.5"/>
+          <circle cx="16" cy="16" r="3" fill="#a09ae8"/>
+          <line x1="16" y1="4" x2="22" y2="2" stroke="#a09ae8" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="powered-by-name">SonicJobs</span>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px;">
+    <a href="matches.html" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;font-size:12px;color:var(--sj-text-muted);text-decoration:none;border:0.5px solid transparent;" onmouseover="this.style.background='var(--sj-gray-light)'" onmouseout="this.style.background='transparent'"><i class="ti ti-arrow-left"></i> SonicJobs</a>
+    <div class="secure-badge"><i class="ti ti-lock"></i> Secure application</div>
+  </div>
+</nav>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <span class="progress-label">Step 3 of 4 — Review &amp; confirm</span>
+  <div class="progress-track"><div class="progress-fill"></div></div>
+  <span class="progress-label" style="color: var(--sj-text);">75%</span>
+</div>
+
+<!-- Job context banner -->
+<div class="job-banner">
+  <div class="job-banner-left">
+    <div class="co-logo co-blue">ST</div>
+    <div>
+      <div class="job-banner-title">Senior Product Manager</div>
+      <div class="job-banner-meta">Stripe · Remote · $140k–$180k</div>
+    </div>
+  </div>
+  <div class="match-chip"><i class="ti ti-sparkles"></i> 94% match</div>
+</div>
+
+<!-- Form -->
+<div class="apply-wrap">
+
+  <!-- Resume -->
+  <div class="section-block">
+    <div class="block-title">Your resume</div>
+    <div class="resume-card">
+      <div class="resume-file">
+        <i class="ti ti-file-text resume-icon"></i>
+        <div>
+          <div class="resume-name-text">Resume_James_Smith_2026.pdf</div>
+          <div class="resume-meta">Uploaded · AI-tailored for this role</div>
+        </div>
+      </div>
+      <div class="resume-status"><i class="ti ti-circle-check"></i> Ready</div>
+    </div>
+  </div>
+
+  <!-- Personal details -->
+  <div class="section-block">
+    <div class="block-title">Personal details</div>
+    <div class="form-grid">
+      <div class="form-field">
+        <label class="field-label">First name</label>
+        <input class="field-input" type="text" value="James" />
+      </div>
+      <div class="form-field">
+        <label class="field-label">Last name</label>
+        <input class="field-input" type="text" value="Smith" />
+      </div>
+      <div class="form-field">
+        <label class="field-label">Email</label>
+        <input class="field-input" type="email" value="james.smith@gmail.com" />
+      </div>
+      <div class="form-field">
+        <label class="field-label">Phone</label>
+        <input class="field-input" type="tel" value="+1 (917) 555 0142" />
+      </div>
+      <div class="form-field full">
+        <label class="field-label">Work authorisation</label>
+        <select class="field-select">
+          <option selected>US Citizen / Permanent Resident</option>
+          <option>H-1B Visa</option>
+          <option>Require sponsorship</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screening questions -->
+  <div class="section-block">
+    <div class="block-title">Screening questions</div>
+    <div class="screening-card">
+      <div class="sq-label">Question 1 of 2</div>
+      <div class="sq-question">Do you have experience working in a fintech or payments environment?</div>
+      <div class="sq-options">
+        <div class="sq-opt selected">Yes — 3+ years</div>
+        <div class="sq-opt">Yes — under 3 years</div>
+        <div class="sq-opt">No</div>
+      </div>
+    </div>
+    <div class="screening-card">
+      <div class="sq-label">Question 2 of 2</div>
+      <div class="sq-question">Are you comfortable owning a product roadmap end-to-end without a dedicated design partner?</div>
+      <div class="sq-options">
+        <div class="sq-opt selected">Yes</div>
+        <div class="sq-opt">Prefer design support</div>
+        <div class="sq-opt">Not sure</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI notice -->
+  <div class="ai-notice">
+    <i class="ti ti-sparkles"></i>
+    <p><strong>Your resume has been tailored for this role.</strong> SonicJobs automatically highlights your fintech and roadmapping experience to match what Stripe is looking for. No need to edit anything.</p>
+  </div>
+
+  <!-- Submit -->
+  <div class="submit-area">
+    <div class="submit-note">By submitting you agree to Monster's <a href="#" style="color: var(--sj-purple-mid);">terms of service</a></div>
+    <a href="partner-matches.html">
+      <button class="btn-partner-primary">Submit application →</button>
+    </a>
+  </div>
+
+</div>
+
+</body>
+</html>
