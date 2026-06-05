@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — SonicJobs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .dash-header { padding: 28px 28px 0; }
+    .dash-title { font-size: 20px; font-weight: 600; color: var(--sj-text); margin-bottom: 4px; }
+    .dash-sub { font-size: 13px; color: var(--sj-text-muted); }
+
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 20px 28px; }
+    .stat-card { background: var(--sj-bg-secondary); border-radius: var(--radius-md); padding: 14px 16px; }
+    .stat-label { font-size: 12px; color: var(--sj-text-muted); margin-bottom: 4px; }
+    .stat-num { font-size: 24px; font-weight: 600; color: var(--sj-text); }
+    .stat-delta { font-size: 11px; margin-top: 3px; }
+    .delta-pos { color: var(--sj-green); }
+    .delta-neutral { color: var(--sj-text-muted); }
+
+    .pipeline { padding: 0 28px 20px; }
+    .pipe-stages {
+      display: flex;
+      border: 0.5px solid var(--sj-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .stage { flex: 1; padding: 14px; border-right: 0.5px solid var(--sj-border); text-align: center; }
+    .stage:last-child { border-right: none; }
+    .stage-dot { width: 8px; height: 8px; border-radius: 50%; margin: 0 auto 6px; }
+    .stage-count { font-size: 20px; font-weight: 600; color: var(--sj-text); }
+    .stage-label { font-size: 11px; color: var(--sj-text-muted); margin-top: 2px; }
+    .d-purple { background: var(--sj-purple); }
+    .d-blue   { background: #378ADD; }
+    .d-amber  { background: var(--sj-amber); }
+    .d-green  { background: var(--sj-green); }
+    .d-gray   { background: var(--sj-gray); }
+
+    .table-section { padding: 0 28px 32px; }
+    .table-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .filter-row { display: flex; gap: 6px; }
+    .filter-chip {
+      padding: 4px 12px; border-radius: 12px; font-size: 12px;
+      border: 0.5px solid var(--sj-border); cursor: pointer;
+      color: var(--sj-text-muted); background: var(--sj-bg);
+    }
+    .filter-chip.active { background: var(--sj-purple-light); color: var(--sj-purple-mid); border-color: rgba(127,119,221,0.3); }
+
+    .table-cols {
+      display: grid;
+      grid-template-columns: 2fr 1.6fr 0.7fr 1fr 1.1fr;
+      gap: 12px;
+      padding: 0 14px 8px;
+      font-size: 11px; color: var(--sj-text-muted);
+      text-transform: uppercase; letter-spacing: 0.6px;
+    }
+    .app-row {
+      display: grid;
+      grid-template-columns: 2fr 1.6fr 0.7fr 1fr 1.1fr;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 0.5px solid var(--sj-border);
+      border-radius: var(--radius-md);
+      margin-bottom: 8px;
+      background: var(--sj-bg);
+    }
+    .app-job { display: flex; align-items: center; gap: 10px; }
+    .app-title { font-size: 13px; font-weight: 500; color: var(--sj-text); }
+    .app-company { font-size: 11px; color: var(--sj-text-muted); }
+
+    .resume-pill {
+      display: flex; align-items: center; gap: 5px;
+      padding: 4px 8px; border-radius: 8px;
+      background: var(--sj-purple-light);
+      border: 0.5px solid rgba(127,119,221,0.2);
+      font-size: 11px; color: var(--sj-purple-mid);
+      max-width: 100%; overflow: hidden;
+    }
+    .resume-pill i { font-size: 13px; flex-shrink: 0; }
+    .resume-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .match-num { font-size: 13px; font-weight: 500; color: var(--sj-green); }
+    .date-text { font-size: 12px; color: var(--sj-text-muted); }
+
+    .s-applied   { background: #E6F1FB; color: #185FA5; }
+    .s-screen    { background: var(--sj-purple-light); color: var(--sj-purple-mid); }
+    .s-interview { background: var(--sj-amber-light); color: #854F0B; }
+    .s-offered   { background: var(--sj-green-light); color: var(--sj-green); }
+    .s-declined  { background: var(--sj-gray-light); color: var(--sj-text-muted); }
+
+    .row-dimmed { opacity: 0.5; }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="14" stroke="#7F77DD" stroke-width="2"/>
+      <circle cx="16" cy="16" r="8" stroke="#9F77DD" stroke-width="1.5"/>
+      <circle cx="16" cy="16" r="3" fill="#534AB7"/>
+      <line x1="16" y1="4" x2="22" y2="2" stroke="#534AB7" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span class="nav-logo-text">SONICJOBS</span>
+  </a>
+  <div class="nav-pills">
+    <a href="matches.html" class="nav-pill"><i class="ti ti-bulb"></i> My matches</a>
+    <a href="search.html" class="nav-pill"><i class="ti ti-search"></i> Search</a>
+    <a href="dashboard.html" class="nav-pill active"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+  </div>
+  <div class="nav-right">
+    <div class="avatar">JS</div>
+  </div>
+</nav>
+
+<!-- Header -->
+<div class="dash-header">
+  <div class="dash-title">Application dashboard</div>
+  <div class="dash-sub">Track every application — and see exactly which resume version we submitted</div>
+</div>
+
+<!-- Stats -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-label">Total applied</div>
+    <div class="stat-num">12</div>
+    <div class="stat-delta delta-pos">↑ 5 this week</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Response rate</div>
+    <div class="stat-num">42%</div>
+    <div class="stat-delta delta-pos">↑ vs 18% avg</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Interviews booked</div>
+    <div class="stat-num">3</div>
+    <div class="stat-delta delta-pos">↑ 2 this week</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Resume variants used</div>
+    <div class="stat-num">4</div>
+    <div class="stat-delta delta-neutral">AI-tailored per role</div>
+  </div>
+</div>
+
+<!-- Pipeline -->
+<div class="pipeline">
+  <div class="section-header">
+    <span class="section-title">Pipeline</span>
+  </div>
+  <div class="pipe-stages">
+    <div class="stage">
+      <div class="stage-dot d-purple"></div>
+      <div class="stage-count">5</div>
+      <div class="stage-label">Applied</div>
+    </div>
+    <div class="stage">
+      <div class="stage-dot d-blue"></div>
+      <div class="stage-count">3</div>
+      <div class="stage-label">Screening</div>
+    </div>
+    <div class="stage">
+      <div class="stage-dot d-amber"></div>
+      <div class="stage-count">3</div>
+      <div class="stage-label">Interview</div>
+    </div>
+    <div class="stage">
+      <div class="stage-dot d-green"></div>
+      <div class="stage-count">1</div>
+      <div class="stage-label">Offer</div>
+    </div>
+    <div class="stage">
+      <div class="stage-dot d-gray"></div>
+      <div class="stage-count">0</div>
+      <div class="stage-label">Declined</div>
+    </div>
+  </div>
+</div>
+
+<!-- Applications table -->
+<div class="table-section">
+  <div class="table-header">
+    <span class="section-title">Applications</span>
+    <div class="filter-row">
+      <div class="filter-chip active">All</div>
+      <div class="filter-chip">Active</div>
+      <div class="filter-chip">Interviews</div>
+    </div>
+  </div>
+
+  <div class="table-cols">
+    <span>Role</span>
+    <span>Resume version</span>
+    <span>Match</span>
+    <span>Status</span>
+    <span>Applied</span>
+  </div>
+
+  <div class="app-row">
+    <div class="app-job">
+      <div class="co-logo co-blue">ST</div>
+      <div><div class="app-title">Senior Product Manager</div><div class="app-company">Stripe · Remote</div></div>
+    </div>
+    <div class="resume-pill"><i class="ti ti-file-text"></i><span class="resume-name">Resume_Stripe_fintech_v3</span></div>
+    <div class="match-num">94%</div>
+    <div><span class="badge s-interview">Interview</span></div>
+    <div class="date-text">2 Jun 2026</div>
+  </div>
+
+  <div class="app-row">
+    <div class="app-job">
+      <div class="co-logo co-green">NV</div>
+      <div><div class="app-title">Product Lead, Growth</div><div class="app-company">Notion · New York</div></div>
+    </div>
+    <div class="resume-pill"><i class="ti ti-file-text"></i><span class="resume-name">Resume_Notion_growth_v2</span></div>
+    <div class="match-num">91%</div>
+    <div><span class="badge s-screen">Screening</span></div>
+    <div class="date-text">1 Jun 2026</div>
+  </div>
+
+  <div class="app-row">
+    <div class="app-job">
+      <div class="co-logo co-purple">LI</div>
+      <div><div class="app-title">PM, Payments Platform</div><div class="app-company">Linear · Remote</div></div>
+    </div>
+    <div class="resume-pill"><i class="ti ti-file-text"></i><span class="resume-name">Resume_Linear_api_v1</span></div>
+    <div class="match-num">88%</div>
+    <div><span class="badge s-interview">Interview</span></div>
+    <div class="date-text">31 May 2026</div>
+  </div>
+
+  <div class="app-row">
+    <div class="app-job">
+      <div class="co-logo co-coral">SH</div>
+      <div><div class="app-title">Group PM, Enterprise</div><div class="app-company">Shopify · Remote</div></div>
+    </div>
+    <div class="resume-pill"><i class="ti ti-file-text"></i><span class="resume-name">Resume_Shopify_enterprise_v2</span></div>
+    <div class="match-num">85%</div>
+    <div><span class="badge s-applied">Applied</span></div>
+    <div class="date-text">30 May 2026</div>
+  </div>
+
+  <div class="app-row">
+    <div class="app-job">
+      <div class="co-logo co-amber">AI</div>
+      <div><div class="app-title">Head of Product</div><div class="app-company">Anthropic · SF</div></div>
+    </div>
+    <div class="resume-pill"><i class="ti ti-file-text"></i><span class="resume-name">Resume_Anthropic_ai_v1</span></div>
+    <div class="match-num">83%</div>
+    <div><span class="badge s-offered">Offer received</span></div>
+    <div class="date-text">28 May 2026</div>
+  </div>
+
+  <div class="app-row row-dimmed">
+    <div class="app-job">
+      <div class="co-logo co-gray">MC</div>
+      <div><div class="app-title">Product Director</div><div class="app-company">Mailchimp · Remote</div></div>
+    </div>
+    <div class="resume-pill"><i class="ti ti-file-text"></i><span class="resume-name">Resume_Mailchimp_mktg_v1</span></div>
+    <div class="match-num" style="color: var(--sj-gray);">76%</div>
+    <div><span class="badge s-declined">No response</span></div>
+    <div class="date-text">20 May 2026</div>
+  </div>
+
+</div>
+
+</body>
+</html>

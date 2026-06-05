@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Matches — SonicJobs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .hero { padding: 28px 28px 20px; border-bottom: 0.5px solid var(--sj-border); }
+    .hero-eyebrow { font-size: 11px; color: var(--sj-text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+    .hero-title { font-size: 20px; font-weight: 600; color: var(--sj-text); margin-bottom: 4px; }
+    .hero-sub { font-size: 13px; color: var(--sj-text-muted); }
+    .hero-meta { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .meta-chip {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 12px; color: var(--sj-text-muted);
+      padding: 4px 10px; border-radius: 12px;
+      background: var(--sj-bg-secondary);
+      border: 0.5px solid var(--sj-border);
+    }
+    .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+    .dot-green { background: var(--sj-green); }
+    .dot-amber { background: var(--sj-amber); }
+
+    .split { display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 200px); }
+    .col { padding: 20px 20px; overflow-y: auto; }
+    .col-left { border-right: 0.5px solid var(--sj-border); }
+
+    .job-card { margin-bottom: 10px; cursor: pointer; }
+    .job-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+    .job-co-row { display: flex; align-items: center; gap: 9px; }
+    .job-title { font-size: 14px; font-weight: 500; color: var(--sj-text); margin-bottom: 2px; }
+    .job-company { font-size: 12px; color: var(--sj-text-muted); }
+    .job-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+    .job-footer { display: flex; align-items: center; justify-content: space-between; }
+    .job-salary { font-size: 11px; color: var(--sj-text-muted); }
+
+    .info-banner {
+      background: var(--sj-amber-light);
+      border: 0.5px solid rgba(186,117,23,0.2);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      display: flex; gap: 8px; align-items: flex-start;
+    }
+    .info-banner i { color: var(--sj-amber); font-size: 16px; margin-top: 1px; flex-shrink: 0; }
+    .info-banner p { font-size: 12px; color: var(--sj-amber); line-height: 1.5; }
+
+    .question-card {
+      background: var(--sj-bg-secondary);
+      border: 0.5px solid var(--sj-border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      margin-top: 8px;
+    }
+    .q-label { font-size: 11px; color: var(--sj-text-muted); margin-bottom: 4px; }
+    .q-text { font-size: 13px; color: var(--sj-text); margin-bottom: 8px; line-height: 1.5; }
+    .q-input {
+      width: 100%; padding: 8px 10px;
+      border: 0.5px solid var(--sj-border);
+      border-radius: 8px; font-size: 13px;
+      background: var(--sj-bg); color: var(--sj-text);
+      font-family: inherit;
+    }
+    .unlock-btn {
+      width: 100%; margin-top: 10px; padding: 9px;
+      background: var(--sj-amber); color: #fff;
+      border: none; border-radius: 20px;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      font-family: inherit;
+    }
+
+    .missing-tag { background: var(--sj-red-light); color: var(--sj-red); border-color: rgba(163,45,45,0.2); }
+    .locked-card { opacity: 0.55; }
+
+    .load-more { text-align: center; padding: 16px 0; font-size: 13px; color: var(--sj-text-muted); }
+
+    .resume-badge { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; background: var(--sj-green-light); color: var(--sj-green); font-size: 12px; border: 0.5px solid rgba(99,153,34,0.2); }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="14" stroke="#7F77DD" stroke-width="2"/>
+      <circle cx="16" cy="16" r="8" stroke="#9F77DD" stroke-width="1.5"/>
+      <circle cx="16" cy="16" r="3" fill="#534AB7"/>
+      <line x1="16" y1="4" x2="22" y2="2" stroke="#534AB7" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span class="nav-logo-text">SONICJOBS</span>
+  </a>
+  <div class="nav-pills">
+    <a href="matches.html" class="nav-pill active"><i class="ti ti-bulb"></i> My matches</a>
+    <a href="search.html" class="nav-pill"><i class="ti ti-search"></i> Search</a>
+    <a href="dashboard.html" class="nav-pill"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+  </div>
+  <div class="nav-right">
+    <div class="resume-badge"><i class="ti ti-file-text"></i> Resume active</div>
+    <div class="avatar">JS</div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-eyebrow"><i class="ti ti-sparkles"></i> Resume-powered matching</div>
+  <div class="hero-title">42 jobs matched to your profile</div>
+  <div class="hero-sub">Based on your resume — Senior Product Manager, 6 years experience in SaaS &amp; fintech</div>
+  <div class="hero-meta">
+    <div class="meta-chip"><span class="dot dot-green"></span> 28 great matches</div>
+    <div class="meta-chip"><span class="dot dot-amber"></span> 14 need more info</div>
+    <div class="meta-chip"><i class="ti ti-map-pin"></i> New York, remote friendly</div>
+    <div class="meta-chip"><i class="ti ti-refresh"></i> Updated 2h ago</div>
+  </div>
+</div>
+
+<!-- Two-column split -->
+<div class="split">
+
+  <!-- Left: Great matches -->
+  <div class="col col-left">
+    <div class="section-header">
+      <span class="section-title">Great matches</span>
+      <span class="badge badge-green">28 jobs</span>
+    </div>
+
+    <!-- Card 1 (selected) -->
+    <div class="card selected job-card">
+      <div class="job-top">
+        <div class="job-co-row">
+          <div class="co-logo co-blue">ST</div>
+          <div>
+            <div class="job-title">Senior Product Manager</div>
+            <div class="job-company">Stripe · Remote</div>
+          </div>
+        </div>
+        <span class="badge badge-green">94% match</span>
+      </div>
+      <div class="job-tags">
+        <span class="tag tag-match">Product strategy</span>
+        <span class="tag tag-match">Fintech</span>
+        <span class="tag tag-match">Roadmapping</span>
+        <span class="tag">Agile</span>
+        <span class="tag">B2B SaaS</span>
+      </div>
+      <div class="job-footer">
+        <span class="job-salary">$140k–$180k · Posted 1d ago</span>
+        <button class="btn-primary">Apply now</button>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="card job-card">
+      <div class="job-top">
+        <div class="job-co-row">
+          <div class="co-logo co-green">NV</div>
+          <div>
+            <div class="job-title">Product Lead, Growth</div>
+            <div class="job-company">Notion · New York</div>
+          </div>
+        </div>
+        <span class="badge badge-green">91% match</span>
+      </div>
+      <div class="job-tags">
+        <span class="tag tag-match">Growth loops</span>
+        <span class="tag tag-match">SaaS</span>
+        <span class="tag tag-match">User research</span>
+        <span class="tag">SQL</span>
+      </div>
+      <div class="job-footer">
+        <span class="job-salary">$130k–$165k · Posted 2d ago</span>
+        <button class="btn-primary">Apply now</button>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="card job-card">
+      <div class="job-top">
+        <div class="job-co-row">
+          <div class="co-logo co-purple">LI</div>
+          <div>
+            <div class="job-title">PM, Payments Platform</div>
+            <div class="job-company">Linear · Remote</div>
+          </div>
+        </div>
+        <span class="badge badge-green">88% match</span>
+      </div>
+      <div class="job-tags">
+        <span class="tag tag-match">Payments</span>
+        <span class="tag tag-match">API products</span>
+        <span class="tag">Developer tools</span>
+        <span class="tag">Roadmapping</span>
+      </div>
+      <div class="job-footer">
+        <span class="job-salary">$135k–$170k · Posted 3d ago</span>
+        <button class="btn-primary">Apply now</button>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="card job-card">
+      <div class="job-top">
+        <div class="job-co-row">
+          <div class="co-logo co-coral">SH</div>
+          <div>
+            <div class="job-title">Group PM, Enterprise</div>
+            <div class="job-company">Shopify · Remote</div>
+          </div>
+        </div>
+        <span class="badge badge-green">85% match</span>
+      </div>
+      <div class="job-tags">
+        <span class="tag tag-match">Enterprise SaaS</span>
+        <span class="tag tag-match">Stakeholder mgmt</span>
+        <span class="tag">Commerce</span>
+      </div>
+      <div class="job-footer">
+        <span class="job-salary">$150k–$195k · Posted 4d ago</span>
+        <button class="btn-primary">Apply now</button>
+      </div>
+    </div>
+
+    <div class="load-more">+ 24 more great matches</div>
+  </div>
+
+  <!-- Right: Need further info -->
+  <div class="col">
+    <div class="section-header">
+      <span class="section-title">Need further info</span>
+      <span class="badge badge-amber">14 jobs</span>
+    </div>
+
+    <div class="info-banner">
+      <i class="ti ti-info-circle"></i>
+      <p>These jobs are close — answer a few quick questions to unlock applications. We only let you apply once you're a strong match.</p>
+    </div>
+
+    <!-- Needs info card 1 -->
+    <div class="card job-card">
+      <div class="job-top">
+        <div class="job-co-row">
+          <div class="co-logo co-amber">GG</div>
+          <div>
+            <div class="job-title">Director of Product, Data</div>
+            <div class="job-company">Google · NYC / Remote</div>
+          </div>
+        </div>
+        <span class="badge badge-amber">2 questions</span>
+      </div>
+      <div class="job-tags">
+        <span class="tag tag-match">Data products</span>
+        <span class="tag tag-match">ML platform</span>
+        <span class="tag missing-tag">Missing: ML experience</span>
+      </div>
+      <div class="question-card">
+        <div class="q-label">Question 1 of 2</div>
+        <div class="q-text">Do you have experience defining product requirements for ML or data pipeline systems?</div>
+        <input class="q-input" type="text" placeholder="Describe your experience..." />
+        <button class="unlock-btn">Answer &amp; unlock →</button>
+      </div>
+    </div>
+
+    <!-- Needs info card 2 -->
+    <div class="card job-card" style="margin-top: 10px;">
+      <div class="job-top">
+        <div class="job-co-row">
+          <div class="co-logo co-blue">CF</div>
+          <div>
+            <div class="job-title">VP Product</div>
+            <div class="job-company">Cloudflare · Remote</div>
+          </div>
+        </div>
+        <span class="badge badge-amber">1 question</span>
+      </div>
+      <div class="job-tags">
+        <span class="tag tag-match">Infrastructure</span>
+        <span class="tag missing-tag">Missing: team size 15+</span>
+      </div>
+      <div class="question-card">
+        <div class="q-label">Question 1 of 1</div>
+        <div class="q-text">What is the largest product team you have directly managed?</div>
+        <input class="q-input" type="text" placeholder="e.g. 18 engineers, 3 designers..." />
+        <button class="unlock-btn">Answer &amp; unlock →</button>
+      </div>
+    </div>
+
+    <!-- Locked card -->
+    <div class="card job-card locked-card" style="margin-top: 10px;">
+      <div class="job-top">
+        <div class="job-co-row">
+          <div class="co-logo co-green">PL</div>
+          <div>
+            <div class="job-title">Head of Product, Mobile</div>
+            <div class="job-company">Plaid · San Francisco</div>
+          </div>
+        </div>
+        <span class="badge badge-amber">3 questions</span>
+      </div>
+      <div class="job-tags">
+        <span class="tag tag-match">Mobile</span>
+        <span class="tag missing-tag">Missing: iOS/Android exp</span>
+        <span class="tag missing-tag">Missing: consumer fintech</span>
+      </div>
+      <div class="job-footer" style="margin-top: 10px;">
+        <span class="job-salary" style="font-size: 12px;">Complete 2 other jobs first to unlock</span>
+        <button class="btn-outline" style="opacity: 0.5; cursor: not-allowed;">Locked</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

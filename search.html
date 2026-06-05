@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search — SonicJobs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .trust-bar { background: var(--sj-purple-mid); padding: 10px 28px; display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .trust-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #fff; }
+    .trust-div { width: 1px; height: 14px; background: rgba(255,255,255,0.25); flex-shrink: 0; }
+
+    .search-top { padding: 28px 28px 20px; border-bottom: 0.5px solid var(--sj-border); }
+    .search-eyebrow { font-size: 11px; color: var(--sj-text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+    .search-title { font-size: 21px; font-weight: 600; color: var(--sj-text); margin-bottom: 4px; }
+    .search-sub { font-size: 13px; color: var(--sj-text-muted); margin-bottom: 18px; }
+
+    .search-box { position: relative; }
+    .search-input {
+      width: 100%; padding: 14px 52px 14px 20px;
+      border: 1.5px solid var(--sj-purple);
+      border-radius: 28px; font-size: 14px;
+      background: var(--sj-bg); color: var(--sj-text);
+      outline: none; font-family: inherit;
+    }
+    .search-input:focus { border-color: var(--sj-purple-mid); }
+    .search-submit {
+      position: absolute; right: 7px; top: 50%; transform: translateY(-50%);
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--sj-purple); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 16px;
+    }
+    .search-submit:hover { background: var(--sj-purple-mid); }
+
+    .example-queries { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+    .eq {
+      padding: 5px 12px; border-radius: 14px; font-size: 12px;
+      border: 0.5px solid var(--sj-border); color: var(--sj-text-muted);
+      cursor: pointer; background: var(--sj-bg-secondary);
+    }
+    .eq:hover { border-color: var(--sj-purple); color: var(--sj-purple-mid); }
+
+    .body-grid { display: grid; grid-template-columns: 220px 1fr; }
+
+    /* Sidebar */
+    .sidebar { border-right: 0.5px solid var(--sj-border); padding: 20px 16px; }
+    .sb-label { font-size: 11px; font-weight: 600; color: var(--sj-text-muted); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 10px; }
+    .sb-row { display: flex; align-items: center; justify-content: space-between; padding: 5px 0; font-size: 13px; color: var(--sj-text-muted); }
+    .sb-count { font-size: 11px; background: var(--sj-bg-secondary); padding: 1px 6px; border-radius: 8px; }
+    .sb-divider { height: 0.5px; background: var(--sj-border); margin: 14px 0; }
+    .sidebar-blurred { filter: blur(2.5px); opacity: 0.4; pointer-events: none; }
+
+    /* Results area */
+    .results-area { position: relative; }
+    .result-count-bar { padding: 14px 16px 6px; font-size: 12px; color: var(--sj-text-muted); }
+
+    /* Blurred results grid */
+    .results-grid {
+      padding: 0 16px 16px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      filter: blur(3px);
+      opacity: 0.4;
+      pointer-events: none;
+      user-select: none;
+    }
+    .rcard { background: var(--sj-bg); border: 0.5px solid var(--sj-border); border-radius: var(--radius-lg); padding: 14px; }
+    .rc-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+    .rc-co { display: flex; align-items: center; gap: 8px; }
+    .rc-title { font-size: 13px; font-weight: 500; color: var(--sj-text); }
+    .rc-comp { font-size: 11px; color: var(--sj-text-muted); }
+    .rc-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+    .rc-sal { font-size: 11px; color: var(--sj-text-muted); }
+    .rc-bar { height: 3px; border-radius: 2px; background: var(--sj-bg-secondary); margin-top: 8px; overflow: hidden; }
+    .rc-fill { height: 100%; border-radius: 2px; background: var(--sj-purple); }
+
+    /* Gate overlay */
+    .gate-wrap {
+      position: relative;
+      margin-top: -430px;
+      z-index: 20;
+      padding: 0 16px 32px;
+    }
+    .gate-card {
+      max-width: 400px;
+      margin: 0 auto;
+      background: var(--sj-bg);
+      border: 0.5px solid var(--sj-border);
+      border-radius: var(--radius-xl);
+      padding: 26px 24px;
+      text-align: center;
+    }
+    .gate-icon-wrap {
+      width: 50px; height: 50px; border-radius: 50%;
+      background: var(--sj-purple-light);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 14px; font-size: 22px; color: var(--sj-purple-mid);
+    }
+    .gate-title { font-size: 16px; font-weight: 600; color: var(--sj-text); margin-bottom: 6px; }
+    .gate-desc { font-size: 13px; color: var(--sj-text-muted); line-height: 1.6; margin-bottom: 18px; }
+
+    .upload-zone {
+      border: 1.5px dashed rgba(127,119,221,0.4);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      cursor: pointer;
+      background: var(--sj-purple-light);
+      margin-bottom: 12px;
+      transition: border-color 0.15s;
+    }
+    .upload-zone:hover { border-color: var(--sj-purple); }
+    .uz-icon { font-size: 26px; color: var(--sj-purple); margin-bottom: 7px; }
+    .uz-main { font-size: 13px; font-weight: 500; color: var(--sj-purple-mid); margin-bottom: 3px; }
+    .uz-sub { font-size: 11px; color: var(--sj-text-muted); }
+
+    .or-divider { display: flex; align-items: center; gap: 10px; margin: 12px 0; font-size: 12px; color: var(--sj-text-muted); }
+    .or-divider::before, .or-divider::after { content: ''; flex: 1; height: 0.5px; background: var(--sj-border); }
+
+    .li-btn {
+      width: 100%; padding: 10px;
+      border: 0.5px solid var(--sj-border);
+      border-radius: 22px;
+      background: var(--sj-bg-secondary);
+      font-size: 13px; cursor: pointer;
+      color: var(--sj-text);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: inherit;
+    }
+    .li-btn:hover { background: var(--sj-gray-light); }
+
+    .stat-trio {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+      margin-top: 16px; padding-top: 14px;
+      border-top: 0.5px solid var(--sj-border);
+      text-align: center;
+    }
+    .stat-num { font-size: 15px; font-weight: 600; display: block; margin-bottom: 2px; }
+    .stat-lbl { font-size: 11px; color: var(--sj-text-muted); line-height: 1.4; }
+
+    .gate-spacer { height: 380px; }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="14" stroke="#7F77DD" stroke-width="2"/>
+      <circle cx="16" cy="16" r="8" stroke="#9F77DD" stroke-width="1.5"/>
+      <circle cx="16" cy="16" r="3" fill="#534AB7"/>
+      <line x1="16" y1="4" x2="22" y2="2" stroke="#534AB7" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span class="nav-logo-text">SONICJOBS</span>
+  </a>
+  <div class="nav-pills">
+    <a href="matches.html" class="nav-pill"><i class="ti ti-bulb"></i> My matches</a>
+    <a href="search.html" class="nav-pill active"><i class="ti ti-search"></i> Search</a>
+    <a href="dashboard.html" class="nav-pill"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+  </div>
+  <div class="nav-right">
+    <div class="avatar">JS</div>
+  </div>
+</nav>
+
+<!-- Trust bar -->
+<div class="trust-bar">
+  <div class="trust-item"><i class="ti ti-database" style="font-size:14px;"></i> 6 million jobs and growing</div>
+  <div class="trust-div"></div>
+  <div class="trust-item"><i class="ti ti-trending-up" style="font-size:14px;"></i> Our candidates land more interviews — resumes tailored to every role</div>
+  <div class="trust-div"></div>
+  <div class="trust-item"><i class="ti ti-circle-check" style="font-size:14px;"></i> One resume upload. Applied everywhere.</div>
+  <div class="trust-div"></div>
+  <div class="trust-item"><i class="ti ti-ban" style="font-size:14px;"></i> No need to go anywhere else</div>
+</div>
+
+<!-- Search bar -->
+<div class="search-top">
+  <div class="search-eyebrow"><i class="ti ti-sparkles"></i> Smart search</div>
+  <div class="search-title">6 million jobs, matched to your resume</div>
+  <div class="search-sub">Describe what you want — as simply or specifically as you like</div>
+  <div class="search-box">
+    <input class="search-input" type="text" value="Senior PM at a Series B fintech, remote-friendly, equity-heavy, not consulting or agencies" />
+    <button class="search-submit" aria-label="Search"><i class="ti ti-arrow-right"></i></button>
+  </div>
+  <div class="example-queries">
+    <div class="eq">VP Product, post-IPO, NYC</div>
+    <div class="eq">PM at a startup, equity-heavy</div>
+    <div class="eq">Director level, no travel</div>
+    <div class="eq">B2B SaaS, small team, SF</div>
+    <div class="eq">PM → CPO growth path</div>
+  </div>
+</div>
+
+<!-- Body: sidebar + results -->
+<div class="body-grid">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sb-label">Refine</div>
+    <div style="font-size:12px;color:var(--sj-text-muted);margin-bottom:10px;line-height:1.5;filter:blur(2px);opacity:0.45;">Upload your resume to unlock filters</div>
+    <div class="sb-divider"></div>
+    <div class="sb-label">Location</div>
+    <div class="sb-row sidebar-blurred"><span>Remote</span><span class="sb-count">1,842</span></div>
+    <div class="sb-row sidebar-blurred"><span>New York</span><span class="sb-count">634</span></div>
+    <div class="sb-row sidebar-blurred"><span>San Francisco</span><span class="sb-count">511</span></div>
+    <div class="sb-row sidebar-blurred"><span>Austin</span><span class="sb-count">298</span></div>
+    <div class="sb-divider"></div>
+    <div class="sb-label">Salary</div>
+    <div class="sb-row sidebar-blurred"><span>$100k–$140k</span><span class="sb-count">892</span></div>
+    <div class="sb-row sidebar-blurred"><span>$140k–$180k</span><span class="sb-count">1,204</span></div>
+    <div class="sb-row sidebar-blurred"><span>$180k+</span><span class="sb-count">487</span></div>
+  </div>
+
+  <!-- Results area -->
+  <div class="results-area">
+
+    <!-- Result count (blurred) -->
+    <div class="result-count-bar" style="filter:blur(2.5px);opacity:0.4;">3,285 jobs matched your search</div>
+
+    <!-- Blurred result cards -->
+    <div class="results-grid">
+      <div class="rcard">
+        <div class="rc-top">
+          <div class="rc-co"><div class="co-logo co-blue">ST</div><div><div class="rc-title">Senior PM</div><div class="rc-comp">Stripe · Remote</div></div></div>
+          <span class="badge badge-green">94%</span>
+        </div>
+        <div class="rc-tags"><span class="tag">Fintech</span><span class="tag">Payments</span><span class="tag">B2B SaaS</span></div>
+        <div class="rc-sal">$140k–$180k</div>
+        <div class="rc-bar"><div class="rc-fill" style="width:94%"></div></div>
+      </div>
+      <div class="rcard">
+        <div class="rc-top">
+          <div class="rc-co"><div class="co-logo co-green">NV</div><div><div class="rc-title">Product Lead, Growth</div><div class="rc-comp">Notion · New York</div></div></div>
+          <span class="badge badge-green">91%</span>
+        </div>
+        <div class="rc-tags"><span class="tag">Growth</span><span class="tag">SaaS</span><span class="tag">PLG</span></div>
+        <div class="rc-sal">$130k–$165k</div>
+        <div class="rc-bar"><div class="rc-fill" style="width:91%"></div></div>
+      </div>
+      <div class="rcard">
+        <div class="rc-top">
+          <div class="rc-co"><div class="co-logo co-purple">LI</div><div><div class="rc-title">PM, Payments Platform</div><div class="rc-comp">Linear · Remote</div></div></div>
+          <span class="badge badge-green">88%</span>
+        </div>
+        <div class="rc-tags"><span class="tag">API products</span><span class="tag">Dev tools</span></div>
+        <div class="rc-sal">$135k–$170k</div>
+        <div class="rc-bar"><div class="rc-fill" style="width:88%"></div></div>
+      </div>
+      <div class="rcard">
+        <div class="rc-top">
+          <div class="rc-co"><div class="co-logo co-coral">SH</div><div><div class="rc-title">Group PM, Enterprise</div><div class="rc-comp">Shopify · Remote</div></div></div>
+          <span class="badge badge-green">85%</span>
+        </div>
+        <div class="rc-tags"><span class="tag">Enterprise</span><span class="tag">Commerce</span></div>
+        <div class="rc-sal">$150k–$195k</div>
+        <div class="rc-bar"><div class="rc-fill" style="width:85%"></div></div>
+      </div>
+      <div class="rcard">
+        <div class="rc-top">
+          <div class="rc-co"><div class="co-logo co-amber">GG</div><div><div class="rc-title">Director of Product</div><div class="rc-comp">Google · NYC / Remote</div></div></div>
+          <span class="badge badge-green">82%</span>
+        </div>
+        <div class="rc-tags"><span class="tag">Data products</span><span class="tag">ML platform</span></div>
+        <div class="rc-sal">$180k–$240k</div>
+        <div class="rc-bar"><div class="rc-fill" style="width:82%"></div></div>
+      </div>
+      <div class="rcard">
+        <div class="rc-top">
+          <div class="rc-co"><div class="co-logo co-blue">CF</div><div><div class="rc-title">VP Product</div><div class="rc-comp">Cloudflare · Remote</div></div></div>
+          <span class="badge badge-green">79%</span>
+        </div>
+        <div class="rc-tags"><span class="tag">Infrastructure</span><span class="tag">Security</span></div>
+        <div class="rc-sal">$160k–$210k</div>
+        <div class="rc-bar"><div class="rc-fill" style="width:79%"></div></div>
+      </div>
+    </div>
+
+    <!-- Gate overlay -->
+    <div class="gate-wrap">
+      <div class="gate-card">
+        <div class="gate-icon-wrap"><i class="ti ti-file-text"></i></div>
+        <div class="gate-title">3,285 jobs found — upload your resume to unlock</div>
+        <div class="gate-desc">We rank every result against your actual experience, tailor your resume to each role automatically, and track every application in one place. No need to go back to Indeed.</div>
+
+        <div class="upload-zone">
+          <div class="uz-icon"><i class="ti ti-upload"></i></div>
+          <div class="uz-main">Drop your resume to unlock results</div>
+          <div class="uz-sub">PDF or Word · Takes 10 seconds</div>
+        </div>
+
+        <div class="or-divider">or</div>
+
+        <button class="li-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="#0A66C2">
+            <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 110-4.14 2.07 2.07 0 010 4.14zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/>
+          </svg>
+          Import from LinkedIn instead
+        </button>
+
+        <div class="stat-trio">
+          <div><span class="stat-num" style="color:var(--sj-text);">6M+</span><span class="stat-lbl">jobs and growing</span></div>
+          <div><span class="stat-num" style="color:var(--sj-green);">Tailored</span><span class="stat-lbl">resume per application</span></div>
+          <div><span class="stat-num" style="color:var(--sj-text);">Zero</span><span class="stat-lbl">duplicate applications</span></div>
+        </div>
+      </div>
+      <div class="gate-spacer"></div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
