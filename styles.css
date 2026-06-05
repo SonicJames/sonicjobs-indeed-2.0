@@ -62,6 +62,23 @@ body {
 }
 .nav-pill:hover { background: var(--sj-gray-light); }
 .nav-pill.active { background: var(--sj-purple-light); color: var(--sj-purple-mid); border-color: rgba(127,119,221,0.3); }
+.nav-divider { width: 1px; height: 18px; background: var(--sj-border); margin: 0 4px; }
+.nav-pill-partner {
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  border: 0.5px solid rgba(82,163,46,0.3);
+  cursor: pointer;
+  color: #68c43a;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(26,46,16,0.6);
+  transition: background 0.15s;
+}
+.nav-pill-partner:hover { background: rgba(26,46,16,1); }
+.nav-pill-partner.active { background: rgba(26,46,16,1); border-color: rgba(82,163,46,0.5); }
 .nav-right { display: flex; align-items: center; gap: 12px; }
 .avatar {
   width: 32px; height: 32px;
